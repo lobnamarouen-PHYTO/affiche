@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plateforme de Suivi Phytothérapie - Docétaxel</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #3498db, #2c3e50);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .patient-info {
+            padding: 30px;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e9ecef;
+        }
+        
+        .patient-info h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-group label {
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        
+        .form-group input, .form-group select {
+            padding: 10px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        
+        .tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 2px solid #dee2e6;
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 600;
+            color: #6c757d;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab:hover {
+            background: #e9ecef;
+        }
+        
+        .tab.active {
+            color: #3498db;
+            background: white;
+            border-bottom-color: #3498db;
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 30px;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .fiche-section {
+            margin-bottom: 30px;
+        }
+        
+        .fiche-section h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #3498db;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #dee2e6;
+        }
+        
+        th {
+            background: #3498db;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .time-column {
+            background: #e3f2fd;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .j0 { background: #bbdefb; }
+        .j14 { background: #ffcdd2; }
+        .j21 { background: #c8e6c9; }
+        
+        input[type="number"], input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+        }
+        
+        .btn-submit {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            transition: transform 0.2s;
+        }
+        
+        .btn-submit:hover {
+            transform: translateY(-2px);
+        }
+        
+        .biomarqueurs-calculated {
+            background: #fff9c4;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+        
+        .biomarqueurs-calculated h4 {
+            color: #f57c00;
+            margin-bottom: 10px;
+        }
+        
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .result-item {
+            padding: 10px;
+            background: white;
+            border-radius: 6px;
+            text-align: center;
+        }
+        
+        .result-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .result-value {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .alert {
+            padding: 15px;
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 8px;
+            color: #155724;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📋 Plateforme de Suivi Phytothérapie</h1>
+            <p>Gestion adjuvante des effets secondaires du docétaxel</p>
+        </div>
+        
+        <div class="patient-info">
+            <h2>Informations Patient</h2>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Nom *</label>
+                    <input type="text" id="nom" placeholder="Nom" required>
+                </div>
+                <div class="form-group">
+                    <label>Prénom *</label>
+                    <input type="text" id="prenom" placeholder="Prénom" required>
+                </div>
+                <div class="form-group">
+                    <label>Âge</label>
+                    <input type="number" id="age" placeholder="Âge">
+                </div>
+                <div class="form-group">
+                    <label>N° Dossier</label>
+                    <input type="text" id="dossier" placeholder="N° Dossier">
+                </div>
+                <div class="form-group">
+                    <label>Cycle</label>
+                    <select id="cycle">
+                        <option value="C1">Cycle 1</option>
+                        <option value="C2">Cycle 2</option>
+                        <option value="C3">Cycle 3</option>
+                        <option value="C4">Cycle 4</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Temps d'évaluation</label>
+                    <select id="temps">
+                        <option value="J0">J0 (Début)</option>
+                        <option value="J14">J14 (Nadir)</option>
+                        <option value="J21">J21 (Évaluation)</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tabs">
+            <div class="tab active" onclick="openTab('neuropathie')">
+                📘 Neuropathie (EORTC)
+            </div>
+            <div class="tab" onclick="openTab('nfs')">
+                🔴 NFS + Biomarqueurs
+            </div>
+            <div class="tab" onclick="openTab('ctcae')">
+                🟢 Effets Secondaires (CTCAE)
+            </div>
+        </div>
+        
+        <!-- TAB 1: NEUROPATHIE -->
+        <div id="neuropathie" class="tab-content active">
+            <div class="fiche-section">
+                <h3>Évaluation Neuropathie (EORTC QLQ-CIPN20)</h3>
+                <p style="color: #666; margin-bottom: 15px;">
+                    <strong>Fréquence :</strong> 0=Jamais | 1=Rarement | 2=Parfois | 3=Souvent | 4=Toujours<br>
+                    <strong>Sévérité :</strong> 0-10 (0=Aucune, 10=Extrême)
+                </p>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Symptôme</th>
+                            <th>Fréquence (0-4)</th>
+                            <th>Sévérité (0-10)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Picotements mains/pieds</td>
+                            <td><input type="number" id="neuro_pico_freq" min="0" max="4" value="0"></td>
+                            <td><input type="number" id="neuro_pico_sev" min="0" max="10" value="0"></td>
+                        </tr>
+                        <tr>
+                            <td>Engourdissements mains/pieds</td>
+                            <td><input type="number" id="neuro_engour_freq" min="0" max="4" value="0"></td>
+                            <td><input type="number" id="neuro_engour_sev" min="0" max="10" value="0"></td>
+                        </tr>
+                        <tr>
+                            <td>Douleurs fulgurantes</td>
+                            <td><input type="number" id="neuro_douleur_freq" min="0" max="4" value="0"></td>
+                            <td><input type="number" id="neuro_douleur_sev" min="0" max="10" value="0"></td>
+                        </tr>
+                        <tr>
+                            <td>Difficulté marche/équilibre</td>
+                            <td><input type="number" id="neuro_marche_freq" min="0" max="4" value="0"></td>
+                            <td><input type="number" id="neuro_marche_sev" min="0" max="10" value="0"></td>
+                        </tr>
+                        <tr>
+                            <td>Difficulté préhension</td>
+                            <td><input type="number" id="neuro_prehen_freq" min="0" max="4" value="0"></td>
+                            <td><input type="number" id="neuro_prehen_sev" min="0" max="10" value="0"></td>
+                        </tr>
+                        <tr>
+                            <td>Sensibilité froid/chaud</td>
+                            <td><input type="number" id="neuro_sensib_freq" min="0" max="4" value="0"></td>
+                            <td><input type="number" id="neuro_sensib_sev" min="0" max="10" value="0"></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="biomarqueurs-calculated">
+                    <h4>Score Total Neuropathie : <span id="score_neuro">0</span> / 90</h4>
+                </div>
+            </div>
+            
+            <button class="btn-submit" onclick="saveNeuropathie()">💾 Enregistrer Neuropathie</button>
+        </div>
+        
+        <!-- TAB 2: NFS + BIOMARQUEURS -->
+        <div id="nfs" class="tab-content">
+            <div class="fiche-section">
+                <h3>NFS (Numération Formule Sanguine)</h3>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Paramètre</th>
+                            <th>Valeur</th>
+                            <th>Unité</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Globules Rouges (GR)</td>
+                            <td><input type="number" id="gr" step="0.01"></td>
+                            <td>10⁶/mm³</td>
+                        </tr>
+                        <tr>
+                            <td>Hémoglobine (HB)</td>
+                            <td><input type="number" id="hb" step="0.1"></td>
+                            <td>g/dL</td>
+                        </tr>
+                        <tr>
+                            <td>Leucocytes (GB)</td>
+                            <td><input type="number" id="gb" step="0.1"></td>
+                            <td>10³/mm³</td>
+                        </tr>
+                        <tr>
+                            <td>Polynucléaires Neutrophiles (PNN)</td>
+                            <td><input type="number" id="pnn" step="0.1" oninput="calculateBiomarkers()"></td>
+                            <td>/mm³</td>
+                        </tr>
+                        <tr>
+                            <td>Lymphocytes (LYM)</td>
+                            <td><input type="number" id="lym" step="0.1" oninput="calculateBiomarkers()"></td>
+                            <td>/mm³</td>
+                        </tr>
+                        <tr>
+                            <td>Monocytes (MONO)</td>
+                            <td><input type="number" id="mono" step="0.1" oninput="calculateBiomarkers()"></td>
+                            <td>/mm³</td>
+                        </tr>
+                        <tr>
+                            <td>Plaquettes (PLQ)</td>
+                            <td><input type="number" id="plq" step="1" oninput="calculateBiomarkers()"></td>
+                            <td>10³/mm³</td>
+                        </tr>
+                        <tr>
+                            <td>CRP (Protéine C-Réactive)</td>
+                            <td><input type="number" id="crp" step="0.1" oninput="calculateBiomarkers()"></td>
+                            <td>mg/L</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="biomarqueurs-calculated">
+                <h4>🧮 Biomarqueurs Calculés Automatiquement</h4>
+                <div class="result-grid">
+                    <div class="result-item">
+                        <div class="result-label">NLR (PNN/LYM)</div>
+                        <div class="result-value" id="nlr_result">-</div>
+                        <small style="color: #666;">Réf: <3</small>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-label">PLR (PLQ/LYM)</div>
+                        <div class="result-value" id="plr_result">-</div>
+                        <small style="color: #666;">Réf: <150</small>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-label">MLR (MONO/LYM)</div>
+                        <div class="result-value" id="mlr_result">-</div>
+                        <small style="color: #666;">Réf: <0.4</small>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-label">NCR (PNN/CRP)</div>
+                        <div class="result-value" id="ncr_result">-</div>
+                        <small style="color: #666;">Évolution</small>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-label">SII (PNN×PLQ/LYM)</div>
+                        <div class="result-value" id="sii_result">-</div>
+                        <small style="color: #666;">Réf: <600</small>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="btn-submit" onclick="saveNFS()">💾 Enregistrer NFS + Biomarqueurs</button>
+        </div>
+        
+        <!-- TAB 3: CTCAE -->
+        <div id="ctcae" class="tab-content">
+            <div class="fiche-section">
+                <h3>Effets Secondaires (CTCAE v5.0)</h3>
+                <p style="color: #666; margin-bottom: 15px;">
+                    <strong>Grades :</strong> G0=Absent | G1=Léger | G2=Modéré | G3=Sévère | G4=Grave | G5=Décès
+                </p>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Effet Secondaire</th>
+                            <th>Grade (0-5)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Nausées</td>
+                            <td>
+                                <select id="ctcae_nausees">
+                                    <option value="0">G0 - Absent</option>
+                                    <option value="1">G1 - Léger</option>
+                                    <option value="2">G2 - Modéré</option>
+                                    <option value="3">G3 - Sévère</option>
+                                    <option value="4">G4 - Grave</option>
+                                    <option value="5">G5 - Décès</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Vomissements</td>
+                            <td>
+                                <select id="ctcae_vomiss">
+                                    <option value="0">G0 - Absent</option>
+                                    <option value="1">G1 - Léger</option>
+                                    <option value="2">G2 - Modéré</option>
+                                    <option value="3">G3 - Sévère</option>
+                                    <option value="4">G4 - Grave</option>
+                                    <option value="5">G5 - Décès</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Diarrhées</td>
+                            <td>
+                                <select id="ctcae_diarrhee">
+                                    <option value="0">G0 - Absent</option>
+                                    <option value="1">G1 - Léger</option>
+                                    <option value="2">G2 - Modéré</option>
+                                    <option value="3">G3 - Sévère</option>
+                                    <option value="4">G4 - Grave</option>
+                                    <option value="5">G5 - Décès</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Mucites</td>
+                            <td>
+                                <select id="ctcae_mucite">
+                                    <option value="0">G0 - Absent</option>
+                                    <option value="1">G1 - Léger</option>
+                                    <option value="2">G2 - Modéré</option>
+                                    <option value="3">G3 - Sévère</option>
+                                    <option value="4">G4 - Grave</option>
+                                    <option value="5">G5 - Décès</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Arthralgies/Myalgies</td>
+                            <td>
+                                <select id="ctcae_arthralgie">
+                                    <option value="0">G0 - Absent</option>
+                                    <option value="1">G1 - Léger</option>
+                                    <option value="2">G2 - Modéré</option>
+                                    <option value="3">G3 - Sévère</option>
+                                    <option value="4">G4 - Grave</option>
+                                    <option value="5">G5 - Décès</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Éruption cutanée</td>
+                            <td>
+                                <select id="ctcae_eruption">
+                                    <option value="0">G0 - Absent</option>
+                                    <option value="1">G1 - Léger</option>
+                                    <option value="2">G2 - Modéré</option>
+                                    <option value="3">G3 - Sévère</option>
+                                    <option value="4">G4 - Grave</option>
+                                    <option value="5">G5 - Décès</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Fatigue</td>
+                            <td>
+                                <select id="ctcae_fatigue">
+                                    <option value="0">G0 - Absent</option>
+                                    <option value="1">G1 - Léger</option>
+                                    <option value="2">G2 - Modéré</option>
+                                    <option value="3">G3 - Sévère</option>
+                                    <option value="4">G4 - Grave</option>
+                                    <option value="5">G5 - Décès</option>
+                                </select>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <button class="btn-submit" onclick="saveCTCAE()">💾 Enregistrer CTCAE</button>
+        </div>
+    </div>
+    
+    <script>
+        // Navigation tabs
+        function openTab(tabName) {
+            const tabs = document.querySelectorAll('.tab');
+            const contents = document.querySelectorAll('.tab-content');
+            
+            tabs.forEach(tab => tab.classList.remove('active'));
+            contents.forEach(content => content.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+        }
+        
+        // Calculate neuropathy score
+        document.querySelectorAll('[id^="neuro_"]').forEach(input => {
+            input.addEventListener('input', () => {
+                let total = 0;
+                document.querySelectorAll('[id^="neuro_"]').forEach(field => {
+                    total += parseInt(field.value) || 0;
+                });
+                document.getElementById('score_neuro').textContent = total;
+            });
+        });
+        
+        // Calculate biomarkers
+        function calculateBiomarkers() {
+            const pnn = parseFloat(document.getElementById('pnn').value) || 0;
+            const lym = parseFloat(document.getElementById('lym').value) || 0;
+            const mono = parseFloat(document.getElementById('mono').value) || 0;
+            const plq = parseFloat(document.getElementById('plq').value) || 0;
+            const crp = parseFloat(document.getElementById('crp').value) || 0;
+            
+            if (lym > 0) {
+                const nlr = (pnn / lym).toFixed(2);
+                const plr = (plq / lym).toFixed(2);
+                const mlr = (mono / lym).toFixed(2);
+                const sii = ((pnn * plq) / lym).toFixed(2);
+                
+                document.getElementById('nlr_result').textContent = nlr;
+                document.getElementById('plr_result').textContent = plr;
+                document.getElementById('mlr_result').textContent = mlr;
+                document.getElementById('sii_result').textContent = sii;
+                
+                // Color coding
+                document.getElementById('nlr_result').style.color = nlr < 3 ? '#27ae60' : '#e74c3c';
+                document.getElementById('plr_result').style.color = plr < 150 ? '#27ae60' : '#e74c3c';
+                document.getElementById('mlr_result').style.color = mlr < 0.4 ? '#27ae60' : '#e74c3c';
+                document.getElementById('sii_result').style.color = sii < 600 ? '#27ae60' : '#e74c3c';
+            }
+            
+            if (crp > 0 && pnn > 0) {
+                const ncr = (pnn / crp).toFixed(2);
+                document.getElementById('ncr_result').textContent = ncr;
+            }
+        }
+        
+        // Get patient data
+        function getPatientData() {
+            return {
+                nom: document.getElementById('nom').value,
+                prenom: document.getElementById('prenom').value,
+                age: document.getElementById('age').value,
+                dossier: document.getElementById('dossier').value,
+                cycle: document.getElementById('cycle').value,
+                temps: document.getElementById('temps').value,
+                date: new Date().toLocaleString('fr-FR')
+            };
+        }
+        
+        // Save functions
+        function saveNeuropathie() {
+            const patient = getPatientData();
+            const data = {
+                ...patient,
+                type: 'Neuropathie',
+                score_total: document.getElementById('score_neuro').textContent
+            };
+            
+            downloadJSON(data, `Neuropathie_${patient.nom}_${patient.cycle}_${patient.temps}.json`);
+            alert('✅ Données neuropathie enregistrées !');
+        }
+        
+        function saveNFS() {
+            const patient = getPatientData();
+            const data = {
+                ...patient,
+                type: 'NFS_Biomarqueurs',
+                nfs: {
+                    gr: document.getElementById('gr').value,
+                    hb: document.getElementById('hb').value,
+                    gb: document.getElementById('gb').value,
+                    pnn: document.getElementById('pnn').value,
+                    lym: document.getElementById('lym').value,
+                    mono: document.getElementById('mono').value,
+                    plq: document.getElementById('plq').value,
+                    crp: document.getElementById('crp').value
+                },
+                biomarqueurs: {
+                    nlr: document.getElementById('nlr_result').textContent,
+                    plr: document.getElementById('plr_result').textContent,
+                    mlr: document.getElementById('mlr_result').textContent,
+                    ncr: document.getElementById('ncr_result').textContent,
+                    sii: document.getElementById('sii_result').textContent
+                }
+            };
+            
+            downloadJSON(data, `NFS_${patient.nom}_${patient.cycle}_${patient.temps}.json`);
+            alert('✅ Données NFS + Biomarqueurs enregistrées !');
+        }
+        
+        function saveCTCAE() {
+            const patient = getPatientData();
+            const data = {
+                ...patient,
+                type: 'CTCAE',
+                effets: {
+                    nausees: document.getElementById('ctcae_nausees').value,
+                    vomissements: document.getElementById('ctcae_vomiss').value,
+                    diarrhees: document.getElementById('ctcae_diarrhee').value,
+                    mucites: document.getElementById('ctcae_mucite').value,
+                    arthralgies: document.getElementById('ctcae_arthralgie').value,
+                    eruption: document.getElementById('ctcae_eruption').value,
+                    fatigue: document.getElementById('ctcae_fatigue').value
+                }
+            };
+            
+            downloadJSON(data, `CTCAE_${patient.nom}_${patient.cycle}_${patient.temps}.json`);
+            alert('✅ Données CTCAE enregistrées !');
+        }
+        
+        // Download as JSON
+        function downloadJSON(data, filename) {
+            const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+        }
+    </script>
+</body>
+</html>

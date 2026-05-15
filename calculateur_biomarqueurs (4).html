@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculateur Biomarqueurs - Phytothérapie & Docétaxel</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            color: #333;
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: transform 0.2s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .results {
+            margin-top: 30px;
+            display: none;
+        }
+        
+        .results.show {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .result-item {
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .result-item.normal {
+            background: #e8f5e9;
+            border-left: 5px solid #4caf50;
+        }
+        
+        .result-item.warning {
+            background: #fff3e0;
+            border-left: 5px solid #ff9800;
+        }
+        
+        .result-item.alert {
+            background: #ffebee;
+            border-left: 5px solid #f44336;
+        }
+        
+        .result-label {
+            font-weight: bold;
+            font-size: 16px;
+        }
+        
+        .result-value {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .result-normal {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .status-icon {
+            font-size: 24px;
+        }
+        
+        .info-box {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 13px;
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        .info-box strong {
+            color: #333;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔬 Calculateur Biomarqueurs</h1>
+        <p class="subtitle">Phytothérapie adjuvante au docétaxel - Monitoring biologique</p>
+        
+        <form id="calculatorForm">
+            <div class="input-group">
+                <label for="neutrophiles">Neutrophiles (/mm³)</label>
+                <input type="number" id="neutrophiles" placeholder="Ex: 4500" required step="0.01">
+            </div>
+            
+            <div class="input-group">
+                <label for="lymphocytes">Lymphocytes (/mm³)</label>
+                <input type="number" id="lymphocytes" placeholder="Ex: 2000" required step="0.01">
+            </div>
+            
+            <div class="input-group">
+                <label for="monocytes">Monocytes (/mm³)</label>
+                <input type="number" id="monocytes" placeholder="Ex: 500" required step="0.01">
+            </div>
+            
+            <div class="input-group">
+                <label for="plaquettes">Plaquettes (/mm³)</label>
+                <input type="number" id="plaquettes" placeholder="Ex: 250000" required step="0.01">
+            </div>
+            
+            <div class="input-group">
+                <label for="crp">CRP - Protéine C-Réactive (mg/L)</label>
+                <input type="number" id="crp" placeholder="Ex: 5" step="0.01">
+            </div>
+            
+            <button type="submit" class="btn">Calculer les ratios</button>
+        </form>
+        
+        <div class="results" id="results">
+            <h2 style="color: #667eea; margin-bottom: 20px; text-align: center;">📊 Résultats</h2>
+            
+            <div id="nlr-result" class="result-item">
+                <div>
+                    <div class="result-label">NLR (Neutrophiles/Lymphocytes)</div>
+                    <div class="result-normal">Normal : &lt; 3</div>
+                </div>
+                <div class="status">
+                    <span class="result-value" id="nlr-value">-</span>
+                    <span class="status-icon" id="nlr-icon">✅</span>
+                </div>
+            </div>
+            
+            <div id="plr-result" class="result-item">
+                <div>
+                    <div class="result-label">PLR (Plaquettes/Lymphocytes)</div>
+                    <div class="result-normal">Normal : &lt; 150</div>
+                </div>
+                <div class="status">
+                    <span class="result-value" id="plr-value">-</span>
+                    <span class="status-icon" id="plr-icon">✅</span>
+                </div>
+            </div>
+            
+            <div id="mlr-result" class="result-item">
+                <div>
+                    <div class="result-label">MLR (Monocytes/Lymphocytes)</div>
+                    <div class="result-normal">Normal : &lt; 0.4</div>
+                </div>
+                <div class="status">
+                    <span class="result-value" id="mlr-value">-</span>
+                    <span class="status-icon" id="mlr-icon">✅</span>
+                </div>
+            </div>
+            
+            <div id="ncr-result" class="result-item">
+                <div>
+                    <div class="result-label">NCR (Neutrophiles/CRP)</div>
+                    <div class="result-normal">Indicateur drainage hépatique</div>
+                </div>
+                <div class="status">
+                    <span class="result-value" id="ncr-value">-</span>
+                    <span class="status-icon" id="ncr-icon">✅</span>
+                </div>
+            </div>
+            
+            <div id="sii-result" class="result-item">
+                <div>
+                    <div class="result-label">SII (Systemic Immune-Inflammation Index)</div>
+                    <div class="result-normal">Normal : &lt; 600</div>
+                </div>
+                <div class="status">
+                    <span class="result-value" id="sii-value">-</span>
+                    <span class="status-icon" id="sii-icon">✅</span>
+                </div>
+            </div>
+            
+            <div class="info-box">
+                <strong>ℹ️ À propos des biomarqueurs :</strong>
+                <br><br>
+                <strong>NLR</strong> (Neutrophiles/Lymphocytes) : Indicateur inflammation systémique. Normal &lt; 3
+                <br>
+                <strong>PLR</strong> (Plaquettes/Lymphocytes) : Protection médullaire + surveillance vasculaire. Normal &lt; 150
+                <br>
+                <strong>MLR</strong> (Monocytes/Lymphocytes) : Immunomodulation. Normal &lt; 0.4
+                <br>
+                <strong>NCR</strong> (Neutrophiles/CRP) : Efficacité drainage hépatique (si CRP fourni)
+                <br>
+                <strong>SII</strong> (Systemic Immune-Inflammation Index) : Équilibre global. Normal &lt; 600
+                <br><br>
+                Ces biomarqueurs permettent d'évaluer l'efficacité du protocole phytothérapique 
+                sur l'inflammation systémique et la protection médullaire.
+                <br><br>
+                <strong>⚠️ Important :</strong> Ces résultats sont des indicateurs de suivi. 
+                Toute interprétation doit être faite par un professionnel de santé.
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.getElementById('calculatorForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Récupérer les valeurs
+            const neutrophiles = parseFloat(document.getElementById('neutrophiles').value);
+            const lymphocytes = parseFloat(document.getElementById('lymphocytes').value);
+            const monocytes = parseFloat(document.getElementById('monocytes').value);
+            const plaquettes = parseFloat(document.getElementById('plaquettes').value);
+            const crp = parseFloat(document.getElementById('crp').value);
+            
+            // Calculer les ratios
+            const nlr = (neutrophiles / lymphocytes).toFixed(2);
+            const plr = (plaquettes / lymphocytes).toFixed(1);
+            const mlr = (monocytes / lymphocytes).toFixed(2);
+            const sii = ((neutrophiles * plaquettes) / lymphocytes).toFixed(0);
+            
+            // Afficher les résultats
+            displayResult('nlr', nlr, 3);
+            displayResult('plr', plr, 150);
+            displayResult('mlr', mlr, 0.4);
+            displayResult('sii', sii, 600);
+            
+            // NCR - calculable si CRP fourni
+            if (crp && crp > 0) {
+                const ncr = (neutrophiles / crp).toFixed(0);
+                document.getElementById('ncr-value').textContent = ncr;
+                const ncrNum = parseFloat(ncr);
+                if (ncrNum < 1000) {
+                    document.getElementById('ncr-result').className = 'result-item normal';
+                    document.getElementById('ncr-icon').textContent = '✅';
+                } else if (ncrNum < 2000) {
+                    document.getElementById('ncr-result').className = 'result-item warning';
+                    document.getElementById('ncr-icon').textContent = '⚠️';
+                } else {
+                    document.getElementById('ncr-result').className = 'result-item alert';
+                    document.getElementById('ncr-icon').textContent = '🔴';
+                }
+            } else {
+                document.getElementById('ncr-value').textContent = 'N/A';
+                document.getElementById('ncr-result').className = 'result-item normal';
+                document.getElementById('ncr-icon').textContent = 'ℹ️';
+            }
+            
+            // Afficher la section résultats
+            document.getElementById('results').classList.add('show');
+            
+            // Scroll vers les résultats
+            document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+        
+        function displayResult(type, value, threshold) {
+            const valueElement = document.getElementById(`${type}-value`);
+            const iconElement = document.getElementById(`${type}-icon`);
+            const resultElement = document.getElementById(`${type}-result`);
+            
+            valueElement.textContent = value;
+            
+            const numValue = parseFloat(value);
+            
+            if (numValue < threshold) {
+                resultElement.className = 'result-item normal';
+                iconElement.textContent = '✅';
+            } else if (numValue < threshold * 1.2) {
+                resultElement.className = 'result-item warning';
+                iconElement.textContent = '⚠️';
+            } else {
+                resultElement.className = 'result-item alert';
+                iconElement.textContent = '🔴';
+            }
+        }
+    </script>
+</body>
+</html>
