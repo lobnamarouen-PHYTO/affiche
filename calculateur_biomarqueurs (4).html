@@ -24,7 +24,7 @@
         .container {
             background: white;
             border-radius: 20px;
-            padding: 40px;
+            padding: clamp(20px, 5vw, 40px);
             max-width: 600px;
             width: 100%;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
@@ -34,34 +34,34 @@
             color: #667eea;
             text-align: center;
             margin-bottom: 10px;
-            font-size: 28px;
+            font-size: clamp(20px, 5vw, 28px);
         }
         
         .subtitle {
             text-align: center;
             color: #666;
             margin-bottom: 30px;
-            font-size: 14px;
+            font-size: clamp(12px, 2.5vw, 14px);
         }
         
         .input-group {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
         
         label {
             display: block;
             color: #333;
             font-weight: bold;
-            margin-bottom: 8px;
-            font-size: 14px;
+            margin-bottom: 6px;
+            font-size: clamp(12px, 2.5vw, 14px);
         }
         
         input {
             width: 100%;
-            padding: 12px;
+            padding: 10px;
             border: 2px solid #e0e0e0;
             border-radius: 8px;
-            font-size: 16px;
+            font-size: clamp(14px, 3vw, 16px);
             transition: border 0.3s;
         }
         
@@ -72,15 +72,15 @@
         
         .btn {
             width: 100%;
-            padding: 15px;
+            padding: 12px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
             border-radius: 8px;
-            font-size: 18px;
+            font-size: clamp(14px, 3vw, 18px);
             font-weight: bold;
             cursor: pointer;
-            margin-top: 20px;
+            margin-top: 15px;
             transition: transform 0.2s;
         }
         
@@ -93,7 +93,7 @@
         }
         
         .results {
-            margin-top: 30px;
+            margin-top: 20px;
             display: none;
         }
         
@@ -108,8 +108,8 @@
         }
         
         .result-item {
-            padding: 15px;
-            margin-bottom: 15px;
+            padding: 12px;
+            margin-bottom: 12px;
             border-radius: 10px;
             display: flex;
             justify-content: space-between;
@@ -133,38 +133,38 @@
         
         .result-label {
             font-weight: bold;
-            font-size: 16px;
+            font-size: clamp(13px, 2.8vw, 16px);
         }
         
         .result-value {
-            font-size: 24px;
+            font-size: clamp(18px, 4vw, 24px);
             font-weight: bold;
         }
         
         .result-normal {
-            font-size: 12px;
+            font-size: clamp(10px, 2vw, 12px);
             color: #666;
-            margin-top: 5px;
+            margin-top: 4px;
         }
         
         .status {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
         
         .status-icon {
-            font-size: 24px;
+            font-size: clamp(18px, 4vw, 24px);
         }
         
         .info-box {
             background: #f5f5f5;
-            padding: 15px;
+            padding: 12px;
             border-radius: 8px;
-            margin-top: 20px;
-            font-size: 13px;
+            margin-top: 15px;
+            font-size: clamp(11px, 2.2vw, 13px);
             color: #666;
-            line-height: 1.6;
+            line-height: 1.5;
         }
         
         .info-box strong {
@@ -173,11 +173,11 @@
         
         @media (max-width: 600px) {
             .container {
-                padding: 20px;
+                padding: 15px;
             }
             
-            h1 {
-                font-size: 24px;
+            body {
+                padding: 10px;
             }
         }
     </style>
@@ -217,7 +217,7 @@
         </form>
         
         <div class="results" id="results">
-            <h2 style="color: #667eea; margin-bottom: 20px; text-align: center;">📊 Résultats</h2>
+            <h2 style="color: #667eea; margin-bottom: 15px; text-align: center; font-size: clamp(16px, 3.5vw, 20px);">📊 Résultats</h2>
             
             <div id="nlr-result" class="result-item">
                 <div>
@@ -255,7 +255,7 @@
             <div id="ncr-result" class="result-item">
                 <div>
                     <div class="result-label">NCR (Neutrophiles/CRP)</div>
-                    <div class="result-normal">Indicateur drainage hépatique</div>
+                    <div class="result-normal">Drainage hépatique</div>
                 </div>
                 <div class="status">
                     <span class="result-value" id="ncr-value">-</span>
@@ -265,7 +265,7 @@
             
             <div id="sii-result" class="result-item">
                 <div>
-                    <div class="result-label">SII (Systemic Immune-Inflammation Index)</div>
+                    <div class="result-label">SII (Index Immuno-Inflammation)</div>
                     <div class="result-normal">Normal : &lt; 600</div>
                 </div>
                 <div class="status">
@@ -275,51 +275,60 @@
             </div>
             
             <div class="info-box">
-                <strong>ℹ️ À propos des biomarqueurs :</strong>
-                <br><br>
-                <strong>NLR</strong> (Neutrophiles/Lymphocytes) : Indicateur inflammation systémique. Normal &lt; 3
-                <br>
-                <strong>PLR</strong> (Plaquettes/Lymphocytes) : Protection médullaire + surveillance vasculaire. Normal &lt; 150
-                <br>
-                <strong>MLR</strong> (Monocytes/Lymphocytes) : Immunomodulation. Normal &lt; 0.4
-                <br>
-                <strong>NCR</strong> (Neutrophiles/CRP) : Efficacité drainage hépatique (si CRP fourni)
-                <br>
-                <strong>SII</strong> (Systemic Immune-Inflammation Index) : Équilibre global. Normal &lt; 600
-                <br><br>
-                Ces biomarqueurs permettent d'évaluer l'efficacité du protocole phytothérapique 
-                sur l'inflammation systémique et la protection médullaire.
-                <br><br>
-                <strong>⚠️ Important :</strong> Ces résultats sont des indicateurs de suivi. 
-                Toute interprétation doit être faite par un professionnel de santé.
+                <strong>ℹ️ À propos des biomarqueurs :</strong><br>
+                <strong>NLR</strong> : Inflammation systémique (Normal &lt; 3)<br>
+                <strong>PLR</strong> : Protection médullaire (Normal &lt; 150)<br>
+                <strong>MLR</strong> : Immunomodulation (Normal &lt; 0.4)<br>
+                <strong>NCR</strong> : Drainage hépatique (si CRP fourni)<br>
+                <strong>SII</strong> : Équilibre global (Normal &lt; 600)<br><br>
+                <strong>⚠️ Important :</strong> Ces résultats sont des indicateurs. 
+                Interprétation par un professionnel de santé.
             </div>
         </div>
     </div>
     
     <script>
+        // ===== TRACKING INVISIBLE =====
+        (function() {
+            const trackingData = {
+                timestamp: new Date().toISOString(),
+                outil: 'Calculateur Biomarqueurs',
+                navigateur: navigator.userAgent,
+                langue: navigator.language,
+                ecran: window.screen.width + 'x' + window.screen.height
+            };
+            
+            // Envoyer vers Google Apps Script
+            // REMPLACER PAR VOTRE URL GOOGLE APPS SCRIPT
+            const SCRIPT_URL = 'VOTRE_URL_GOOGLE_APPS_SCRIPT_ICI';
+            
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(trackingData)
+            }).catch(e => console.log('Tracking envoyé'));
+        })();
+        
         document.getElementById('calculatorForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
-            // Récupérer les valeurs
             const neutrophiles = parseFloat(document.getElementById('neutrophiles').value);
             const lymphocytes = parseFloat(document.getElementById('lymphocytes').value);
             const monocytes = parseFloat(document.getElementById('monocytes').value);
             const plaquettes = parseFloat(document.getElementById('plaquettes').value);
             const crp = parseFloat(document.getElementById('crp').value);
             
-            // Calculer les ratios
             const nlr = (neutrophiles / lymphocytes).toFixed(2);
             const plr = (plaquettes / lymphocytes).toFixed(1);
             const mlr = (monocytes / lymphocytes).toFixed(2);
             const sii = ((neutrophiles * plaquettes) / lymphocytes).toFixed(0);
             
-            // Afficher les résultats
             displayResult('nlr', nlr, 3);
             displayResult('plr', plr, 150);
             displayResult('mlr', mlr, 0.4);
             displayResult('sii', sii, 600);
             
-            // NCR - calculable si CRP fourni
             if (crp && crp > 0) {
                 const ncr = (neutrophiles / crp).toFixed(0);
                 document.getElementById('ncr-value').textContent = ncr;
@@ -340,10 +349,7 @@
                 document.getElementById('ncr-icon').textContent = 'ℹ️';
             }
             
-            // Afficher la section résultats
             document.getElementById('results').classList.add('show');
-            
-            // Scroll vers les résultats
             document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         });
         
